@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B6654FFB2F27AED0005E576A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B6654FFA2F27AED0005E576A /* libz.tbd */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B6654FDF2F27AE8D005E576A /* compresser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = compresser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6654FFA2F27AED0005E576A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6654FFB2F27AED0005E576A /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				B6654FE12F27AE8D005E576A /* compresser */,
+				B6654FF92F27AED0005E576A /* Frameworks */,
 				B6654FE02F27AE8D005E576A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +63,14 @@
 				B6654FDF2F27AE8D005E576A /* compresser.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B6654FF92F27AED0005E576A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B6654FFA2F27AED0005E576A /* libz.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
