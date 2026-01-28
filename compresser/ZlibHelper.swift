@@ -5,6 +5,15 @@
 //  Created by Misha Causur on 26.01.2026.
 //
 
+enum ZlibError: Error {
+    case deflateInit(Int32)
+    case deflate(Int32)
+    case inflateInit(Int32)
+    case inflate(Int32)
+    case outputTooLarge
+    case dataError
+}
+
 import Foundation
 import zlib
 
@@ -27,7 +36,7 @@ final class ZlibHelper {
         )
 
         guard rcInit == Z_OK else {
-            throw NSError(domain: "zlib", code: Int(rcInit))
+            throw ZlibError.deflateInit(rcInit)
         }
 
         defer { deflateEnd(&stream) }
@@ -68,7 +77,7 @@ final class ZlibHelper {
                     if rc == Z_STREAM_END {
                         didFinish = true
                     } else if rc != Z_OK {
-                        threw = NSError(domain: "zlib", code: Int(rc))
+                        threw = ZlibError.inflate(rc)
                     }
                 }
 
@@ -79,7 +88,10 @@ final class ZlibHelper {
         return output
     }
 
-    func decompress(_ data: Data) throws -> Data {
+    func decompress(
+        _ data: Data,
+        maxOutputBytes: Int = 10 * 1024 * 1024
+    ) throws -> Data {
         guard !data.isEmpty else {
             return Data()
         }
@@ -95,7 +107,7 @@ final class ZlibHelper {
             Int32(MemoryLayout<z_stream>.size)
         )
         guard rcInit == Z_OK else {
-            throw NSError(domain: "zlib", code: Int(rcInit))
+            throw ZlibError.inflateInit(rcInit)
         }
         defer { inflateEnd(&stream) }
 
@@ -104,7 +116,8 @@ final class ZlibHelper {
         var buffer = [UInt8](repeating: 0, count: chunkSize)
 
         try data.withUnsafeBytes { (inRaw: UnsafeRawBufferPointer) in
-            guard let inBase = inRaw.bindMemory(to: UInt8.self).baseAddress else {
+            guard let inBase = inRaw.bindMemory(to: UInt8.self).baseAddress
+            else {
                 return
             }
 
@@ -117,7 +130,7 @@ final class ZlibHelper {
 
                 let bufferCount = buffer.count
 
-                buffer.withUnsafeMutableBytes { outRaw in
+                try buffer.withUnsafeMutableBytes { outRaw in
                     guard
                         let outBase = outRaw.bindMemory(to: UInt8.self)
                             .baseAddress
@@ -135,10 +148,14 @@ final class ZlibHelper {
                         output.append(outBase, count: produced)
                     }
 
+                    if output.count > maxOutputBytes {
+                        throw ZlibError.outputTooLarge
+                    }
+
                     if rc == Z_STREAM_END {
                         didFinish = true
                     } else if rc != Z_OK {
-                        threw = NSError(domain: "zlib", code: Int(rc))
+                        threw = ZlibError.deflate(rc)
                     }
                 }
 
@@ -146,7 +163,7 @@ final class ZlibHelper {
                 if didFinish { break }
 
                 if stream.avail_in == 0 {
-                    throw NSError(domain: "zlib", code: Int(Z_DATA_ERROR))
+                    throw ZlibError.dataError
                 }
             }
         }

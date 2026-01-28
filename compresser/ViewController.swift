@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         print("compressed:", compressed.count) // 17
         
         let restored = try! helper.decompress(compressed)
-        print("compressed:", restored.count) // 29
+        print("restored:", restored.count) // 29
         print("restored == original:", restored == original)
         print(String(data: restored, encoding: .utf8)!)
     }
