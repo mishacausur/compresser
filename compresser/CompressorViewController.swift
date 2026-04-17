@@ -7,10 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CompressorViewController: UIViewController {
 
     private let zlib = ZlibHelper()
-
     private lazy var ui = createUI()
 
     override func viewDidLoad() {
@@ -88,7 +87,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController {
+extension CompressorViewController {
 
     struct UI {
         let inputTextView: UITextView
@@ -134,7 +133,7 @@ extension ViewController {
             decompressButton: decompressButton,
         )
     }
-    
+
     func setupUI() {
 
         styleTextView(ui.inputTextView)
@@ -176,7 +175,6 @@ extension ViewController {
             view.addSubview($0)
         }
     }
-
 
     func layout() {
         let g = view.safeAreaLayoutGuide
@@ -276,7 +274,7 @@ extension ViewController {
         ])
     }
 
-    fileprivate func styleTextView(_ tv: UITextView) {
+    func styleTextView(_ tv: UITextView) {
         tv.font = .systemFont(ofSize: 15)
         tv.layer.borderWidth = 1
         tv.layer.borderColor = UIColor.separator.cgColor
