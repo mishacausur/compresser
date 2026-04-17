@@ -5,6 +5,9 @@
 //  Created by Misha Causur on 26.01.2026.
 //
 
+import Foundation
+import zlib
+
 enum ZlibError: Error {
     case deflateInit(Int32)
     case deflate(Int32)
@@ -13,9 +16,6 @@ enum ZlibError: Error {
     case outputTooLarge
     case dataError
 }
-
-import Foundation
-import zlib
 
 final class ZlibHelper {
     func compress(_ data: Data) throws -> Data {
